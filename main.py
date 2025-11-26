@@ -3,8 +3,11 @@ from contextlib import asynccontextmanager
 from database.session import Base, engine
 
 import logging
+
+import models.user
+from routers import auth
+
 logger = logging.getLogger(__name__)
-app = FastAPI()
 
 # FastAPI 실행 시, DB 자동 생성
 @asynccontextmanager
@@ -16,6 +19,10 @@ async def lifespan(app_instance: FastAPI):
 
     # shutdown
     logger.info("서버 종료")
+
+app = FastAPI(lifespan=lifespan)
+# auth 라우터
+app.include_router(auth.router)
 
 @app.get("/")
 async def root():
