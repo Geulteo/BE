@@ -2,9 +2,11 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models.user import UserCreate, UserResponse
+from fastapi.security import OAuth2PasswordRequestForm
+from models.user import UserCreate, UserResponse, Token, TokenRequest
 from database.session import get_db
 from services import user as user_service
+from services import auth as auth_service
 
 router = APIRouter(
     prefix="/auth",
@@ -76,3 +78,27 @@ def delete_user(
     # 사용자 삭제
     user_service.delete_user(db, db_user=db_user)
     return
+
+# 로그인 (POST /auth/login)
+@router.post("/login", response_model=Token)
+def login_for_access_token(
+        form_data: TokenRequest,
+        db: Session = Depends(get_db)
+):
+    user = user_service.get_user_by_userid(db, userid=form_data.userid)
+
+    # 사용자 존재 및 비밀번호 검증
+    if not user or not auth_service.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="사용자 ID가 존재하지 않거나 비밀번호가 일치하지 않습니다.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # JWT 토큰 생성
+    access_token = auth_service.create_access_token(
+        data={"sub": user.userid}
+    )
+
+    # 토큰 반환
+    return {"access_token": access_token, "token_type": "bearer"}

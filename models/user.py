@@ -26,3 +26,13 @@ class UserResponse(BaseModel):
     # ORM 모델(User 클래스)의 인스턴스를 Pydantic 모델로 변환할 수 있도록 설정
     class Config:
         from_attributes = True
+
+# 로그인 요청 스키마
+class TokenRequest(BaseModel):
+    userid: str
+    password: str
+
+# 서버 응답 (JWT 토큰) 스키마
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
