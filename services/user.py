@@ -15,11 +15,11 @@ def get_password_hash(password: str) -> str:
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).offset(skip).limit(limit).all()
 
-def get_user_by_id(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+def get_user_by_id(db: Session, id_: int) -> Optional[User]:
+    return db.query(User).filter(User.id == id_).first()
 
-def get_user_by_email(db: Session, email: str) -> Optional[User]:
-    return db.query(User).filter(User.email == email).first()
+def get_user_by_userid(db: Session, userid: str) -> Optional[User]:
+    return db.query(User).filter(User.userid == userid).first()
 
 def get_user_by_username(db: Session, username: str) -> Optional[User]:
     return db.query(User).filter(User.username == username).first()
@@ -32,9 +32,9 @@ def create_user(db: Session, user_create: UserCreate) -> User:
 
     # DB 모델 인스턴스 생성
     db_user = User(
-        username=user_create.username,
-        email=user_create.email,
+        userid=user_create.userid,
         hashed_password=hashed_password,
+        username=user_create.username,
     )
 
     # DB 세션에 추가 및 커밋

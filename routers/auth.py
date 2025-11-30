@@ -21,11 +21,12 @@ def register_user(
         user_data: UserCreate,  # 요청 바디를 models.UserCreate 스키마로 받음
         db: Session = Depends(get_db)  # database.session.get_db 함수를 통해 DB 세션 주입
 ):
-    # 이메일 중복 확인
-    if user_service.get_user_by_email(db, email=user_data.email):
+
+    # userid 중복 확인 (이메일 중복 확인 로직 대체)
+    if user_service.get_user_by_userid(db, userid=user_data.userid):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="이미 등록된 이메일 주소입니다."
+            detail="이미 존재하는 사용자 ID입니다."
         )
 
     # 사용자 이름 중복 확인
@@ -55,21 +56,21 @@ def get_all_users(
     users = user_service.get_users(db, skip=skip, limit=limit)
     return users
 
-# (DELETE /auth/users/{user_id})
+# (DELETE /auth/users/{id})
 @router.delete(
-    "/users/{user_id}",
-    status_code=status.HTTP_204_NO_CONTENT  # 성공적인 삭제 시 204 No Content 반환
+    "/users/{id}",
+    status_code=status.HTTP_204_NO_CONTENT
 )
 def delete_user(
-        user_id: int,
+        id: int,
         db: Session = Depends(get_db)
 ):
     # 사용자 존재 확인
-    db_user = user_service.get_user_by_id(db, user_id=user_id)
+    db_user = user_service.get_user_by_id(db, id_=id)
     if db_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"사용자 ID {user_id}를 찾을 수 없습니다."
+            detail=f"사용자 ID {id}를 찾을 수 없습니다."
         )
 
     # 사용자 삭제
