@@ -2,6 +2,11 @@ sqlalchemy>=2.0.0
 pymysql>=1.1.0
 pydantic-settings==2.4.0
 
-# 인증 및 보안 (비밀번호 해싱)
+# 인증 및 보안
 passlib
 bcrypt==4.3.0
+python-jose
+pyjwt
+
+# keyword 전처리
+konlpy
