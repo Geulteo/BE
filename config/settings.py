@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     DB_USERNAME: Optional[str] = None
     DB_PASSWORD: Optional[str] = None
 
+    # JWT 설정
+    SECRET_KEY: str  # JWT 서명에 사용할 비밀 키
+    ALGORITHM: str = "HS256"  # JWT 암호화 알고리즘
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 액세스 토큰 만료 시간 (분)
+
     def database_url_sync(self) -> str:
         if not self.DB_URL:
             raise ValueError("환경변수 DB_URL이 필요합니다.")
