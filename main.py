@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 # FastAPI 실행 시, DB 자동 생성
 @asynccontextmanager
 async def lifespan(app_instance: FastAPI):
+    # 기존 테이블 삭제 (DB 테이블 구조 변경을 위한 테스트용)
+    # print("DB 테이블 구조 변경 감지: 기존 테이블 삭제 중...")
+    # Base.metadata.drop_all(bind=engine)
+
     Base.metadata.create_all(bind=engine)
     logger.info("DB 초기 테이블 생성 완료")
 
