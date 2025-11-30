@@ -24,18 +24,11 @@ def register_user(
         db: Session = Depends(get_db)  # database.session.get_db 함수를 통해 DB 세션 주입
 ):
 
-    # userid 중복 확인 (이메일 중복 확인 로직 대체)
+    # userid 중복 확인
     if user_service.get_user_by_userid(db, userid=user_data.userid):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="이미 존재하는 사용자 ID입니다."
-        )
-
-    # 사용자 이름 중복 확인
-    if user_service.get_user_by_username(db, username=user_data.username):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="이미 존재하는 사용자 이름입니다."
         )
 
     # 사용자 생성

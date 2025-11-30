@@ -5,7 +5,7 @@ from database.session import Base, engine
 import logging
 
 import models.user
-from routers import auth
+from routers import auth, keyword
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,8 @@ async def lifespan(app_instance: FastAPI):
 app = FastAPI(lifespan=lifespan)
 # auth 라우터
 app.include_router(auth.router)
+# keyword 라우터
+app.include_router(keyword.router)
 
 @app.get("/")
 async def root():
