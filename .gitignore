@@ -1,1 +1,41 @@
+# Environment variables
 /.env
+.env
+.env.*
+
+# Python cache & build
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+build/
+dist/
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.iml
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage / test outputs
+htmlcov/
+.coverage
+.cache/
+pytest_cache/
+
+# FastAPI / Uvicorn specific
+*.sqlite3
