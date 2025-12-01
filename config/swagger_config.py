@@ -1,12 +1,42 @@
-# config/swagger_config.py
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends
 import os
 
+from jose import jwt, JWTError
+from config.settings import get_settings
+
 # JWT Bearer 토큰 스키마
 security = HTTPBearer()
+
+# settings.py 값 사용
+settings = get_settings()
+
+# JWT 디코딩 함수 - python-jose 및 settings 기반으로 조정 ---
+def decode_jwt_token(token: str) -> dict:
+    """JWT 토큰 디코딩 및 유효성 검증"""
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+        )
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+        )
+
+
+# 토큰 인증 의존성 get_current_user에 decode 함수 적용 ---
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    token = credentials.credentials
+    payload = decode_jwt_token(token)
+    return payload
 
 def custom_openapi(app: FastAPI):
     """커스텀 OpenAPI 스키마 생성"""
@@ -29,21 +59,15 @@ def custom_openapi(app: FastAPI):
         ]
     )
 
-    if "components" not in openapi_schema:
-        openapi_schema["components"] = {}
-
+    components = openapi_schema.setdefault("components", {})
+    security_schemes = components.setdefault("securitySchemes", {})
 
     # JWT Bearer 인증 스키마 추가
-    openapi_schema["components"]["securitySchemes"] = {
-        "bearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-        }
+    security_schemes["bearerAuth"] = {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
     }
-
-    # 전역 보안 요구사항 설정
-    openapi_schema["security"] = [{"bearerAuth": []}]
 
     app.openapi_schema = openapi_schema
     return app.openapi_schema
@@ -74,12 +98,3 @@ def create_app() -> FastAPI:
     setup_swagger(app)
 
     return app
-
-
-# JWT 토큰 의존성 (필요한 엔드포인트에서 사용)
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """JWT 토큰 검증 의존성"""
-    token = credentials.credentials
-    # 여기에 JWT 토큰 검증 로직 추가
-    # decode_jwt_token(token) 등
-    return {"user_id": "example", "token": token}
