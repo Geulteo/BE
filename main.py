@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from database.session import Base, engine
 
 import logging
+from config.swagger_config import setup_swagger
 
 import models.user
 from routers import auth, keyword
@@ -30,6 +31,9 @@ app = FastAPI(lifespan=lifespan)
 
 # 전역 예외 핸들러 등록
 register_exception_handlers(app)
+
+# Swagger
+setup_swagger(app)
 
 # auth 라우터
 app.include_router(auth.router)
