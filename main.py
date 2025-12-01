@@ -7,6 +7,8 @@ import logging
 import models.user
 from routers import auth, keyword
 
+from core.exception_handlers import register_exception_handlers
+
 logger = logging.getLogger(__name__)
 
 # FastAPI 실행 시, DB 자동 생성
@@ -25,16 +27,26 @@ async def lifespan(app_instance: FastAPI):
     logger.info("서버 종료")
 
 app = FastAPI(lifespan=lifespan)
+
+# 전역 예외 핸들러 등록
+register_exception_handlers(app)
+
 # auth 라우터
 app.include_router(auth.router)
 # keyword 라우터
 app.include_router(keyword.router)
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
+# ----------------------------------------------------
+# core -> 이 아래 모든 코드들은 추후 모두 삭제 예정
+from core.exceptions import CustomException
+from core.error_codes import GlobalErrorCode
+from core.base_response import BaseResponse
+@app.get("/hello/{name}", response_model=BaseResponse)
 async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+    if name == "error":
+        # 에러 테스트
+        raise CustomException(GlobalErrorCode.INVALID_INPUT_VALUE)
+
+    return BaseResponse.success_response(
+        data={"greeting": f"Hello {name}"}
+    )
