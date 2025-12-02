@@ -1,8 +1,5 @@
-from typing import List
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends,status
 from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordRequestForm
 
 from models.user import UserCreateRequest, UserResponse, UserDeleteResponse
 from models.auth import TokenRequest, TokenResponse
@@ -25,6 +22,8 @@ router = APIRouter(
     "/register",
     response_model=BaseResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="회원가입",
+    description="새로운 사용자를 등록합니다. userid가 이미 존재할 경우 400 에러를 반환합니다."
 )
 def register_user(
         user_data: UserCreateRequest,  # 요청 바디를 models.UserCreate 스키마로 받음
@@ -45,7 +44,9 @@ def register_user(
 # (DELETE /auth/users/{id})
 @router.delete(
     "/users/{id}",
-    response_model=UserDeleteResponse
+    response_model=UserDeleteResponse,
+    summary="사용자 탈퇴",
+    description="로그인된 사용자가 Path Parameter로 지정된 사용자를 삭제합니다. 본인만 삭제 가능합니다."
 )
 def delete_user(
         id: int,
@@ -71,7 +72,11 @@ def delete_user(
     )
 
 # 로그인 (POST /auth/login)
-@router.post("/login", response_model=BaseResponse)
+@router.post("/login",
+             response_model=BaseResponse,
+             summary="로그인",
+             description="userid와 password를 사용하여 JWT 토큰을 발급받습니다."
+             )
 def login_for_access_token(
         form_data: TokenRequest,
         db: Session = Depends(get_db)

@@ -16,6 +16,8 @@ router = APIRouter(
 @router.post(
     "/preprocess",
     response_model=BaseResponse,
+    summary="사용자 키워드 전처리 및 검증",
+    description="사용자가 입력한 텍스트를 정제하고, 키워드를 추출하여 다음 단계(메일 생성)로 전달할 데이터를 반환합니다. 키워드가 부족하면 400 에러를 반환합니다."
 )
 def handle_user_input(
         data: KeywordRequest,
