@@ -11,9 +11,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
-# 사용자 조회
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
+# # 사용자 조회
+# def get_users(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(User).offset(skip).limit(limit).all()
 
 def get_user_by_id(db: Session, id_: int) -> Optional[User]:
     return db.query(User).filter(User.id == id_).first()

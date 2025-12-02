@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status, Depends
 from typing import Dict, Any
 
+from core.base_response import BaseResponse
 from models.keyword import KeywordRequest, PreprocessResult
 from services import keyword as keyword_service
 
@@ -16,17 +17,12 @@ router = APIRouter(
 # 입력 검증 및 전처리 (POST/keyword/preprocess)
 @router.post(
     "/preprocess",
-    response_model=PreprocessResult,
-    summary="Keyword preprocessing",
-    tags=["Keyword"],
-    responses={
-        400: {"description": "키워드 부족 안내"}
-    }
+    response_model=BaseResponse, # 💡 BaseResponse로 통일
 )
 def handle_user_input(
         data: KeywordRequest,
         current_user: dict = Depends(get_current_user)
-) -> PreprocessResult:
+) -> BaseResponse:
 
     result = keyword_service.process_user_input(data)
 
@@ -38,4 +34,7 @@ def handle_user_input(
         )
 
     # 성공 결과 반환
-    return result["data"]
+    return BaseResponse.success_response(
+        data=result["data"],
+        message="키워드 전처리 완료"
+    )

@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
+
 from models.user import UserCreate, UserResponse, Token, TokenRequest
 from database.session import get_db
 from services import user as user_service
@@ -11,6 +12,7 @@ from services import auth as auth_service
 from config.swagger_config import  get_current_user
 from core.exceptions import CustomException
 from core.error_codes import GlobalErrorCode
+from core.base_response import BaseResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -20,8 +22,8 @@ router = APIRouter(
 # 회원가입 (POST /auth/register)
 @router.post(
     "/register",
-    response_model=UserResponse,  # 응답 데이터 형식 지정
-    status_code=status.HTTP_201_CREATED,  # 성공 시 HTTP 201 Created 반환
+    response_model=BaseResponse,
+    status_code=status.HTTP_201_CREATED,
 )
 def register_user(
         user_data: UserCreate,  # 요청 바디를 models.UserCreate 스키마로 받음
@@ -34,9 +36,10 @@ def register_user(
 
     # 사용자 생성
     new_user = user_service.create_user(db=db, user_create=user_data)
+    response_data = UserResponse.model_validate(new_user)
 
     # 응답 반환
-    return new_user
+    return BaseResponse.success_response(data=response_data, message="회원가입이 성공적으로 완료되었습니다.")
 
 # (DELETE /auth/users/{id})
 @router.delete(
@@ -64,7 +67,7 @@ def delete_user(
     return
 
 # 로그인 (POST /auth/login)
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=BaseResponse)
 def login_for_access_token(
         form_data: TokenRequest,
         db: Session = Depends(get_db)
@@ -80,5 +83,6 @@ def login_for_access_token(
         data={"sub": user.userid}
     )
 
-    # 토큰 반환
-    return {"access_token": access_token, "token_type": "bearer"}
+    token_data = {"access_token": access_token, "token_type": "bearer"}
+
+    return BaseResponse.success_response(data=token_data)
