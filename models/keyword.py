@@ -1,11 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Literal, Optional
 
-# 드롭다운 옵션
-ToneOption = Literal["neutral", "polite", "business", "emotional"]
-LengthOption = Literal["short", "normal", "detailed"]
-TargetOption = Literal["professor", "senior_junior", "friend", "manager"]
-
+from models.common_options import ToneOption, LengthOption, TargetOption
 
 # keyword 입력 요청 스키마
 class KeywordRequest(BaseModel):
