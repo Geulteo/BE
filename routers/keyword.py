@@ -1,6 +1,4 @@
-from fastapi import APIRouter, status, Depends
-from typing import Dict, Any
-
+from fastapi import APIRouter, Depends
 from core.base_response import BaseResponse
 from models.keyword import KeywordRequest
 from services import keyword as keyword_service
@@ -24,17 +22,23 @@ def handle_user_input(
         current_user: dict = Depends(get_current_user)
 ) -> BaseResponse:
 
-    result = keyword_service.process_user_input(data)
+    user_id = current_user.get("sub")
+    result = keyword_service.process_user_input(data, user_id=user_id)
 
     #키워드 부족 검증 결과 확인
-    if result["error"]:
+    if result.get("error") is True:
         raise CustomException(
             GlobalErrorCode.INVALID_INPUT_VALUE,
             detail=result["message"]
         )
 
     # 성공 결과 반환
+    response_data = {
+        k: v for k, v in result.items()
+        if k not in ["error", "message"]
+    }
+
     return BaseResponse.success_response(
-        data=result["data"],
-        message="키워드 전처리 완료"
+        data=response_data,
+        message="키워드 전처리 및 검증 완료"
     )

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Literal, Optional
+from typing import List
 
 from models.common_options import ToneOption, LengthOption, TargetOption
 
@@ -16,7 +16,7 @@ class KeywordRequest(BaseModel):
 # 2. 응답 (Response) 모델
 
 # 전처리 결과 응답 스키마
-class keywordResponse(BaseModel):
+class KeywordResponse(BaseModel):
 
     cleaned_text: str = Field(..., description="전처리된 텍스트(특수문자/구분자)")
     keywords: List[str] = Field(..., description="추출된 핵심 키워드 리스트")
