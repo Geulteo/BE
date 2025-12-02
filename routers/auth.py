@@ -8,6 +8,10 @@ from database.session import get_db
 from services import user as user_service
 from services import auth as auth_service
 
+from config.swagger_config import  get_current_user
+from core.exceptions import CustomException
+from core.error_codes import GlobalErrorCode
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]  # Swagger UI 태그
@@ -26,30 +30,13 @@ def register_user(
 
     # userid 중복 확인
     if user_service.get_user_by_userid(db, userid=user_data.userid):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="이미 존재하는 사용자 ID입니다."
-        )
+        raise CustomException(GlobalErrorCode.INVALID_INPUT_VALUE, detail="이미 존재하는 사용자 ID입니다.")
 
     # 사용자 생성
     new_user = user_service.create_user(db=db, user_create=user_data)
 
     # 응답 반환
     return new_user
-
-# 전체 사용자 조회 (GET /auth/users)
-@router.get(
-    "/users",
-    response_model=List[UserResponse],
-    status_code=status.HTTP_200_OK,
-)
-def get_all_users(
-        db: Session = Depends(get_db),
-        skip: int = 0, # 건너뛸 항목 수
-        limit: int = 100 # 최대 항목 수
-):
-    users = user_service.get_users(db, skip=skip, limit=limit)
-    return users
 
 # (DELETE /auth/users/{id})
 @router.delete(
@@ -58,15 +45,19 @@ def get_all_users(
 )
 def delete_user(
         id: int,
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user: dict = Depends(get_current_user)
 ):
     # 사용자 존재 확인
     db_user = user_service.get_user_by_id(db, id_=id)
     if db_user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"사용자 ID {id}를 찾을 수 없습니다."
-        )
+        raise CustomException(GlobalErrorCode.RESOURCE_NOT_FOUND, detail=f"사용자 ID {id}를 찾을 수 없습니다.")
+
+    # 사용자 본인 확인
+    logged_in_userid = current_user.get("sub")
+
+    if logged_in_userid != db_user.userid:
+        raise CustomException(GlobalErrorCode.FORBIDDEN)
 
     # 사용자 삭제
     user_service.delete_user(db, db_user=db_user)
@@ -82,11 +73,7 @@ def login_for_access_token(
 
     # 사용자 존재 및 비밀번호 검증
     if not user or not auth_service.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="사용자 ID가 존재하지 않거나 비밀번호가 일치하지 않습니다.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise CustomException(GlobalErrorCode.UNAUTHORIZED, detail="사용자 ID가 존재하지 않거나 비밀번호가 일치하지 않습니다.")
 
     # JWT 토큰 생성
     access_token = auth_service.create_access_token(

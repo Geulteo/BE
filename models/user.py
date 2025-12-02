@@ -6,7 +6,7 @@ from database.session import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, unique=True,index=True)
     userid = Column(String(50), unique=True, index=True)
     hashed_password = Column(String(255))
     username = Column(String(50), index=True)
