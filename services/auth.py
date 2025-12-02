@@ -1,16 +1,27 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from jose import jwt, JWTError
-from passlib.context import CryptContext
+from jose import jwt
+from sqlalchemy.orm import Session
 
 from config.settings import get_settings
+from core.security import verify_password
+from services import user as user_service
+from models.user import User
 
 settings = get_settings()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# 비밀번호 검증
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password) # 텍스트 비번-해시 비번간 일치 여부 반환
+# 사용자 인증 및 토큰 관련 함수
+def authenticate_user(db: Session, userid: str, password: str) -> User | None:
+    # 사용자 ID로 DB에서 사용자 정보 가져옴
+    db_user = user_service.get_user_by_userid(db, userid=userid)
+    if not db_user:
+        return None
+
+    # 비밀번호 검증
+    if not verify_password(password, db_user.password):
+        return None
+
+    return db_user
 
 # JWT 토큰 생성 함수
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

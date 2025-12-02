@@ -1,15 +1,9 @@
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
+
+from core.security import get_password_hash
 from models.user import User, UserCreateRequest
 from typing import Optional
-
-# 비밀번호 해싱을 위한 컨텍스트 객체
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# 비밀번호 암호화
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
 
 def get_user_by_id(db: Session, id_: int) -> Optional[User]:
     return db.query(User).filter(User.id == id_).first()
