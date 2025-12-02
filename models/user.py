@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from database.session import Base
 
 # DB 테이블 구조 정의
@@ -11,28 +11,27 @@ class User(Base):
     hashed_password = Column(String(255))
     username = Column(String(50), index=True)
 
-# 클라이언트 요청 스키마 정의
-class UserCreate(BaseModel):
-    userid: str  # <- 새로운 userid 필드
+# 1. 요청 (Request) 모델
+
+# 회원 가입 요청 데이터
+class UserCreateRequest(BaseModel):
+    userid: str
     password: str
     username: str
 
-# 서버 응답 스키마 정의
+# 2. 응답 (Response) 모델
+
+# 사용자 정보 응답
 class UserResponse(BaseModel):
-    id: int
+    id: int = Field(..., description="데이터베이스 ID")
     userid: str
     username: str
 
-    # ORM 모델(User 클래스)의 인스턴스를 Pydantic 모델로 변환할 수 있도록 설정
     class Config:
+        # SQLAlchemy ORM 모델에서 Pydantic 모델로 변환 허용
         from_attributes = True
 
-# 로그인 요청 스키마
-class TokenRequest(BaseModel):
-    userid: str
-    password: str
-
-# 서버 응답 (JWT 토큰) 스키마
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
+# 회원 탈퇴 응답
+class UserDeleteResponse(BaseModel):
+    message: str = "사용자가 성공적으로 삭제되었습니다."
+    detail: str

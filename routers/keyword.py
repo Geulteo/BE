@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Depends
 from typing import Dict, Any
 
 from core.base_response import BaseResponse
-from models.keyword import KeywordRequest, PreprocessResult
+from models.keyword import KeywordRequest
 from services import keyword as keyword_service
 
 from config.swagger_config import  get_current_user
@@ -17,7 +17,7 @@ router = APIRouter(
 # 입력 검증 및 전처리 (POST/keyword/preprocess)
 @router.post(
     "/preprocess",
-    response_model=BaseResponse, # 💡 BaseResponse로 통일
+    response_model=BaseResponse,
 )
 def handle_user_input(
         data: KeywordRequest,

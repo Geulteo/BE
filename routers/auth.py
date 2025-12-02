@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
-from models.user import UserCreate, UserResponse, Token, TokenRequest
+from models.user import UserCreateRequest, UserResponse, UserDeleteResponse
+from models.auth import TokenRequest, TokenResponse
 from database.session import get_db
 from services import user as user_service
 from services import auth as auth_service
@@ -26,7 +27,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 def register_user(
-        user_data: UserCreate,  # 요청 바디를 models.UserCreate 스키마로 받음
+        user_data: UserCreateRequest,  # 요청 바디를 models.UserCreate 스키마로 받음
         db: Session = Depends(get_db)  # database.session.get_db 함수를 통해 DB 세션 주입
 ):
 
@@ -44,13 +45,13 @@ def register_user(
 # (DELETE /auth/users/{id})
 @router.delete(
     "/users/{id}",
-    status_code=status.HTTP_204_NO_CONTENT
+    response_model=UserDeleteResponse
 )
 def delete_user(
         id: int,
         db: Session = Depends(get_db),
         current_user: dict = Depends(get_current_user)
-):
+)-> UserDeleteResponse:
     # 사용자 존재 확인
     db_user = user_service.get_user_by_id(db, id_=id)
     if db_user is None:
@@ -64,7 +65,10 @@ def delete_user(
 
     # 사용자 삭제
     user_service.delete_user(db, db_user=db_user)
-    return
+    return UserDeleteResponse(
+        message="사용자가 성공적으로 삭제되었습니다.",
+        detail=f"탈퇴된 사용자 ID: {db_user.userid}"
+    )
 
 # 로그인 (POST /auth/login)
 @router.post("/login", response_model=BaseResponse)

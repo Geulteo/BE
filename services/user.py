@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from models.user import User, UserCreate
+from models.user import User, UserCreateRequest
 from typing import Optional
 
 # 비밀번호 해싱을 위한 컨텍스트 객체
@@ -10,10 +10,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # 비밀번호 암호화
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
-
-# # 사용자 조회
-# def get_users(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(User).offset(skip).limit(limit).all()
 
 def get_user_by_id(db: Session, id_: int) -> Optional[User]:
     return db.query(User).filter(User.id == id_).first()
@@ -25,7 +21,7 @@ def get_user_by_username(db: Session, username: str) -> Optional[User]:
     return db.query(User).filter(User.username == username).first()
 
 # 회원가입 서비스
-def create_user(db: Session, user_create: UserCreate) -> User:
+def create_user(db: Session, user_create: UserCreateRequest) -> User:
 
     # 비밀번호 암호화
     hashed_password = get_password_hash(user_create.password)

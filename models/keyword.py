@@ -3,6 +3,8 @@ from typing import List, Literal, Optional
 
 from models.common_options import ToneOption, LengthOption, TargetOption
 
+# 1. 요청 (Request) 모델
+
 # keyword 입력 요청 스키마
 class KeywordRequest(BaseModel):
 
@@ -11,9 +13,10 @@ class KeywordRequest(BaseModel):
     length_option: LengthOption = Field("normal", description="선택된 길이 옵션") # 기본값 normal
     target: TargetOption = Field("professor", description="말하는 대상") # 기본값 professor
 
+# 2. 응답 (Response) 모델
 
 # 전처리 결과 응답 스키마
-class PreprocessResult(BaseModel):
+class keywordResponse(BaseModel):
 
     cleaned_text: str = Field(..., description="전처리된 텍스트(특수문자/구분자)")
     keywords: List[str] = Field(..., description="추출된 핵심 키워드 리스트")
