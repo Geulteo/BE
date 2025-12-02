@@ -4,7 +4,7 @@ pydantic-settings==2.4.0
 
 # 인증 및 보안
 passlib
-bcrypt==4.3.0
+bcrypt==3.2.0
 python-jose
 pyjwt
 
