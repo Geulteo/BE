@@ -10,3 +10,16 @@ pyjwt
 
 # keyword 전처리
 konlpy
+sentence-transformers
+
+# Vector DB (RAG)
+qdrant-client==1.15.1
+
+# OpenAI API
+openai>=1.0.0
+
+# Optional but recommended
+orjson
+
+# FastAPI
+fastapi
