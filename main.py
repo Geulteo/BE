@@ -6,9 +6,13 @@ import logging
 from config.swagger_config import setup_swagger
 
 import models.user
-from routers import auth, keyword
+from routers import auth, keyword, training_test
 
 from core.exception_handlers import register_exception_handlers
+
+from repositories.difficulty_repository import DifficultyCardRepository
+from services.difficulty_vector_store import DifficultyVectorStore
+from services.difficulty_service import DifficultyService
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +25,20 @@ async def lifespan(app_instance: FastAPI):
 
     Base.metadata.create_all(bind=engine)
     logger.info("DB 초기 테이블 생성 완료")
+
+    # 난이도 진단 서비스 초기화 (RAG + Qdrant + SBERT)
+    try:
+        repo = DifficultyCardRepository("./data/difficulty_cards.json")
+        cards = repo.load_all()
+
+        vector_store = DifficultyVectorStore(cards)
+        difficulty_service = DifficultyService(vector_store)
+
+        # 다른 곳(라우터)에서 DI로 꺼내 쓰기 위한 주입
+        app_instance.state.difficulty_service = difficulty_service
+        logger.info("난이도 진단 서비스 초기화 완료")
+    except Exception as e:
+        logger.exception(f"난이도 진단 서비스 초기화 중 오류 발생: {e}")
 
     yield   # --- 앱이 실행되는 동안 --- #
 
@@ -40,17 +58,4 @@ app.include_router(auth.router)
 # keyword 라우터
 app.include_router(keyword.router)
 
-# ----------------------------------------------------
-# core -> 이 아래 모든 코드들은 추후 모두 삭제 예정
-from core.exceptions import CustomException
-from core.error_codes import GlobalErrorCode
-from core.base_response import BaseResponse
-@app.get("/hello/{name}", response_model=BaseResponse)
-async def say_hello(name: str):
-    if name == "error":
-        # 에러 테스트
-        raise CustomException(GlobalErrorCode.INVALID_INPUT_VALUE)
-
-    return BaseResponse.success_response(
-        data={"greeting": f"Hello {name}"}
-    )
+app.include_router(training_test.router)
