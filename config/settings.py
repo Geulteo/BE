@@ -10,6 +10,14 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
+    # Qdrant 설정 (배포 시 .env에서 주입)
+    QDRANT_HOST: str = "qdrant"   # docker-compose 기준 서비스 이름
+    QDRANT_PORT: int = 6333
+    QDRANT_DIFFICULTY_COLLECTION: str = "difficulty_cards"
+
+    # SBERT / Embedding 모델
+    SBERT_MODEL_NAME: str = "jhgan/ko-sbert-multitask"
+
     # LLM 설정
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_MODEL: str = "gpt-4o-mini"
