@@ -10,6 +10,10 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
+    # LLM 설정
+    OPENAI_API_KEY: Optional[str] = None
+    OPENAI_MODEL: str = "gpt-4o-mini"
+
     DB_URL: Optional[str] = None
     DB_USERNAME: Optional[str] = None
     DB_PASSWORD: Optional[str] = None
