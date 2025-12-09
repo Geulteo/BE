@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"  # JWT 암호화 알고리즘
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 액세스 토큰 만료 시간 (분)
 
+    CORS_ORIGINS: Optional[str] = "*"   # 기본은 전체 허용 (개발용)
+
     def database_url_sync(self) -> str:
         if not self.DB_URL:
             raise ValueError("환경변수 DB_URL이 필요합니다.")
