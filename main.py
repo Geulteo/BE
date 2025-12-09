@@ -15,7 +15,23 @@ from repositories.difficulty_repository import DifficultyCardRepository
 from services.difficulty_vector_store import DifficultyVectorStore
 from services.difficulty_service import DifficultyService
 
+from fastapi.middleware.cors import CORSMiddleware
+from config.settings import get_settings
+
 logger = logging.getLogger(__name__)
+
+settings = get_settings()
+
+# .env의 CORS_ORIGINS를 파싱해서 리스트로 만드는 함수
+def get_cors_origins() -> list[str]:
+    raw = settings.CORS_ORIGINS
+    if not raw:
+        return ["*"]
+    raw = raw.strip()
+    if raw == "*":
+        return ["*"]
+    # "http://localhost:3000, http://127.0.0.1:3000" 형태를 리스트로 변환
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 # FastAPI 실행 시, DB 자동 생성
 @asynccontextmanager
@@ -56,9 +72,17 @@ async def lifespan(app_instance: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    docs_url="/swagger-ui",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    # docs_url="/swagger-ui",
+    # redoc_url="/redoc",
+    # openapi_url="/openapi.json"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_cors_origins(),  # .env에서 읽어온 origin 리스트
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 전역 예외 핸들러 등록
