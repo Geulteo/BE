@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database.session import Base, engine
+from services.intent_classifier import IntentClassifier
 
 import logging
 from config.swagger_config import setup_swagger
@@ -40,12 +41,25 @@ async def lifespan(app_instance: FastAPI):
     except Exception as e:
         logger.exception(f"난이도 진단 서비스 초기화 중 오류 발생: {e}")
 
+        # Intent 분류기 초기화
+    try:
+        intent_classifier = IntentClassifier()
+        app_instance.state.intent_classifier = intent_classifier
+        logger.info("Intent 분류기 초기화 완료")
+    except Exception as e:
+        logger.exception(f"Intent 분류기 초기화 중 오류 발생: {e}")
+
     yield   # --- 앱이 실행되는 동안 --- #
 
     # shutdown
     logger.info("서버 종료")
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    docs_url="/swagger-ui",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
+)
 
 # 전역 예외 핸들러 등록
 register_exception_handlers(app)
