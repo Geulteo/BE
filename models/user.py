@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 from pydantic import BaseModel, Field
 from database.session import Base
 
 # DB 테이블 구조 정의
+
+# 사용자 모델 정의
 class User(Base):
     __tablename__ = "users"
 
@@ -10,6 +12,14 @@ class User(Base):
     userid = Column(String(50), unique=True, index=True)
     hashed_password = Column(String(255))
     username = Column(String(50), index=True)
+
+# 로그아웃된 토큰(Blacklist) 모델 정의
+class BlacklistedToken(Base):
+    __tablename__ = "blacklisted_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String(500), unique=True, index=True)
+    expires_at = Column(DateTime)
 
 # 1. 요청 (Request) 모델
 
