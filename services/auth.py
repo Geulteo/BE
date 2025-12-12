@@ -2,11 +2,13 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from config.settings import get_settings
 from core.security import verify_password
 from services import user as user_service
-from models.user import User
+from services import auth as auth_service
+from models.user import User, BlacklistedToken
 
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -59,10 +61,18 @@ def get_current_user(
     Authorization: Bearer <token> 에서 토큰을 꺼내
     - JWT 디코딩
     - 사용자 존재 여부 확인
+    - 토큰 블랙리스트 여부 확인
     후, {"sub": userid} 형태로 반환.
     (기존 delete_user에서 current_user.get("sub")로 쓰고 있으므로 dict로 맞춰줌)
     """
     token = credentials.credentials
+
+    # 토큰 블랙리스트 검사
+    if auth_service.is_token_blacklisted(db, token):
+        raise CustomException(
+            GlobalErrorCode.UNAUTHORIZED,
+            detail="이 토큰은 이미 로그아웃 처리되었거나 무효화되었습니다.",
+        )
 
     try:
         payload = jwt.decode(
@@ -91,4 +101,48 @@ def get_current_user(
         )
 
     # 기존 delete_user에서 current_user.get("sub")로 쓰고 있어서 그대로 맞춰줌
-    return db_user
+    return {"sub": db_user.userid}
+
+
+# 주어진 JWT 토큰을 블랙리스트에 추가, 이미 존재하면 오류를 무시
+def blacklist_token(db: Session, token: str):
+    try:
+        # 토큰을 디코딩하여 만료 시각(exp)을 가져옴
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+
+        expires_at_timestamp = payload.get("exp")
+        if expires_at_timestamp:
+            expires_at = datetime.fromtimestamp(expires_at_timestamp)
+        else:
+            return
+
+        # BlacklistedToken 테이블에 저장
+        db_token = BlacklistedToken(
+            token=token,
+            expires_at=expires_at
+        )
+        db.add(db_token)
+        db.commit()
+
+    # 유효하지 않은 토큰인 경우
+    except JWTError:
+        db.rollback()
+        pass
+
+    # 토큰이 이미 DB에 존재할 경우
+    except IntegrityError:
+        db.rollback()
+        pass
+
+
+# 주어진 토큰이 블랙리스트에 있는지 확인
+def is_token_blacklisted(db: Session, token: str) -> bool:
+
+    # 토큰이 테이블에 존재하는지 확인
+    db_token = db.query(BlacklistedToken).filter(BlacklistedToken.token == token).first()
+
+    # 블랙리스트에 있다면 True 반환
+    if db_token:
+        return True
+
+    return False

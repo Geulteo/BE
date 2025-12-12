@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends,status
+from fastapi import APIRouter, Depends,status, Header
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from models.user import UserCreateRequest, UserResponse, UserDeleteResponse
@@ -11,6 +12,7 @@ from config.swagger_config import  get_current_user
 from core.exceptions import CustomException
 from core.error_codes import GlobalErrorCode
 from core.base_response import BaseResponse
+from services.auth import security
 
 router = APIRouter(
     prefix="/auth",
@@ -95,3 +97,26 @@ def login_for_access_token(
     token_data = {"access_token": access_token, "token_type": "bearer"}
 
     return BaseResponse.success_response(data=token_data)
+
+
+# 로그아웃 (POST /auth/logout)
+@router.post(
+    "/logout",
+    response_model=BaseResponse,
+    summary="로그아웃",
+    description="액세스 토큰을 서버의 블랙리스트에 등록하여 즉시 무효화합니다. (토큰 블랙리스트 처리)"
+)
+def logout_user(
+        db: Session = Depends(get_db),
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+) -> BaseResponse:
+    # credentials 객체에서 'Bearer '가 제거된 순수한 토큰 값만 추출
+    token = credentials.credentials
+
+    # 토큰을 블랙리스트에 추가
+    auth_service.blacklist_token(db, token=token)
+
+    # 응답 반환
+    return BaseResponse.success_response(
+        message="로그아웃이 성공적으로 처리되었으며 토큰이 무효화되었습니다."
+    )
