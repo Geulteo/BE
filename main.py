@@ -8,7 +8,6 @@ from database.session import Base, engine
 
 import logging
 from config.swagger_config import setup_swagger
-import models.user
 from routers import auth, keyword, training_test
 from core.exception_handlers import register_exception_handlers
 from repositories.difficulty_repository import DifficultyCardRepository
@@ -16,6 +15,7 @@ from services.difficulty_vector_store import DifficultyVectorStore
 from services.difficulty_service import DifficultyService
 from services.intent.classifier import IntentClassifier
 from services.intent.pipeline import IntentPipeline
+from services.intent.subtemplate_classifier import SubtemplateClassifier
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +62,9 @@ async def lifespan(app_instance: FastAPI):
         pipeline = IntentPipeline(classifier)
         app_instance.state.intent_classifier = pipeline
         logger.info("Intent 분류기 초기화 완료")
+        app_instance.state.subtemplate_classifier = SubtemplateClassifier(model=classifier.model)
+        logger.info("Subtemplate 분류기 초기화 완료")
+
     except Exception as e:
         logger.exception(f"Intent 분류기 초기화 중 오류 발생: {e}")
 
