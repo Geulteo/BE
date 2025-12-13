@@ -41,16 +41,9 @@ def handle_user_input(
             message=result["message"],
         )
 
-
-    # 2) Intent 분류 실행
-    raw_text = result.get("cleaned_text", "")
-    keywords = result.get("keywords", [])
-
+    # 2) Intent 분류 실행 (Pipeline.run)
     try:
-        intent_result = intent_classifier.predict(
-            raw_text=raw_text,
-            keywords=keywords  # 문장이면 내부에서 무시
-        )
+        intent_result = intent_classifier.run(data)
     except Exception as e:
         print("Intent Classification Error:", e)
         return BaseResponse.error_response(
@@ -60,8 +53,8 @@ def handle_user_input(
 
     # 3) 최종 응답 데이터 구성
     response_data = {
-        "cleaned_text": raw_text,
-        "keywords": keywords,
+        "cleaned_text": result.get("cleaned_text"),
+        "keywords": result.get("keywords"),
         "pos_tags": result.get("pos_tags"),
         "tone": result.get("tone"),
         "length_option": result.get("length_option"),
