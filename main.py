@@ -10,12 +10,12 @@ import logging
 from config.swagger_config import setup_swagger
 from routers import auth, keyword, training_test
 from core.exception_handlers import register_exception_handlers
-from repositories.difficulty_repository import DifficultyCardRepository
 from services.difficulty_vector_store import DifficultyVectorStore
 from services.difficulty_service import DifficultyService
 from services.intent.classifier import IntentClassifier
 from services.intent.pipeline import IntentPipeline
 from services.intent.subtemplate_classifier import SubtemplateClassifier
+from templates.difficulty_templates import DIFFICULTY_CARDS
 
 logger = logging.getLogger(__name__)
 
@@ -44,8 +44,7 @@ async def lifespan(app_instance: FastAPI):
 
     # 난이도 진단 서비스 초기화 (RAG + Qdrant + SBERT)
     try:
-        repo = DifficultyCardRepository("./data/difficulty_cards.json")
-        cards = repo.load_all()
+        cards = DIFFICULTY_CARDS
 
         vector_store = DifficultyVectorStore(cards)
         difficulty_service = DifficultyService(vector_store)
