@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+
+from fastapi.middleware.cors import CORSMiddleware
+from config.settings import get_settings
+
 from database.session import Base, engine
 
 import logging
@@ -14,6 +18,19 @@ from services.intent.classifier import IntentClassifier
 from services.intent.pipeline import IntentPipeline
 
 logger = logging.getLogger(__name__)
+
+settings = get_settings()
+
+def get_cors_origins() -> list[str]:
+    raw = settings.CORS_ORIGINS
+    if not raw:
+        return ["*"]
+    raw = raw.strip()
+    if raw == "*":
+        return ["*"]
+    # "http://localhost:3000, http://127.0.0.1:3000" 형태를 리스트로 변환
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
 
 # FastAPI 실행 시, DB 자동 생성
 @asynccontextmanager
@@ -56,9 +73,17 @@ async def lifespan(app_instance: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    docs_url="/swagger-ui",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    # docs_url="/swagger-ui",
+    # redoc_url="/redoc",
+    # openapi_url="/openapi.json"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_cors_origins(),  # .env에서 읽어온 origin 리스트
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 전역 예외 핸들러 등록
