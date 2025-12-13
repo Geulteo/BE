@@ -1,8 +1,8 @@
-from typing import List
+from typing import List ,Optional
 from pydantic import BaseModel
 
 from core.level_enums import DifficultyLevel
-from core.type_enums import IntentType, TemplateId
+from core.type_enums import IntentType, TemplateId, TargetType
 
 
 class DifficultyCard(BaseModel):
@@ -10,11 +10,11 @@ class DifficultyCard(BaseModel):
     id: str
     intent: IntentType
     template_id: TemplateId
-    target: str           # 예: "professor", "friend", "boss"
+    target: Optional[TargetType] = None
     level: DifficultyLevel
     title: str
     guide: str
-    hint: str             # 사용자에게 보여줄 한 줄 요약
+    hint: str
     checklist: List[str]
 
     def to_prompt_text(self) -> str:

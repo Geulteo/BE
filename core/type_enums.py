@@ -16,3 +16,9 @@ class TemplateId(str, Enum):
     REQUEST_HELP = "request_help"           # 과제/업무 도움 요청
     REQUEST_INFO = "request_info"           # 자료 요청
     REQUEST_DEFAULT = "request_default"     # 기타 요청
+
+class TargetType(str, Enum):
+    PROFESSOR = "professor"        # 교수님
+    SENIOR_JUNIOR = "senior_junior" # 선/후배
+    FRIEND = "friend"              # 친구
+    BOSS = "boss"                  # 직장 상사
