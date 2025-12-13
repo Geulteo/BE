@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import Dict
 
 from services.intent.classifier import IntentClassifier
-from services.models.intent import IntentResult
+from models.intent import IntentResult
 from services.preprocess import preprocess_and_validate_input
 
 
