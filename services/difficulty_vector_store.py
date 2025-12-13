@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-import uuid
+import uuid, logging
 
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
@@ -18,6 +18,7 @@ from config.settings import get_settings
 
 settings = get_settings()
 
+logger = logging.getLogger(__name__)
 
 class DifficultyVectorStore:
     # 난이도 기준 카드를 Qdrant에 인덱싱하고 검색하는 클래스
@@ -42,10 +43,12 @@ class DifficultyVectorStore:
         self._index_cards()
 
     def _create_collection_if_needed(self) -> None:
-        # 컬렉션이 없으면 생성, 있으면 그대로 사용
-        collections = [c.name for c in self.client.get_collections().collections]
-        if self.collection_name in collections:
-            return
+        # # 컬렉션이 없으면 생성, 있으면 그대로 사용
+        # collections = [c.name for c in self.client.get_collections().collections]
+        # if self.collection_name in collections:
+        #     return
+
+        self.client.delete_collection(self.collection_name)
 
         # SBERT 768차원 기준, 코사인 거리 사용
         self.client.create_collection(
@@ -61,6 +64,9 @@ class DifficultyVectorStore:
             doc = card.to_prompt_text()
             embedding = self.model.encode(doc).tolist()
 
+            # 카드에 target이 없으면 any로 저장 (복제 방지)
+            target_value = getattr(card.target, "value", None) or "any"
+
             points.append(
                 PointStruct(
                     id=str(uuid.uuid4()),
@@ -68,7 +74,7 @@ class DifficultyVectorStore:
                     payload={
                         "intent": card.intent.value,
                         "template_id": card.template_id.value,
-                        "target": card.target,
+                        "target": target_value,
                         "level": card.level.value,
                         "document": doc,
                     },
@@ -77,6 +83,12 @@ class DifficultyVectorStore:
 
         if points:
             self.client.upsert(collection_name=self.collection_name, points=points)
+
+        logger.info(f"[DEBUG] Indexed {len(points)} difficulty cards into Qdrant")
+
+        print("[DEBUG] Indexed cards payload sample:")
+        for p in points[:3]:
+            print(p.payload)
 
     def search_cards(
             self,
@@ -92,6 +104,7 @@ class DifficultyVectorStore:
 
         # 2) 필터 조건 구성
         must_conditions: list[FieldCondition] = []
+        should_conditions = []
 
         if level is not None:
             must_conditions.append(
@@ -101,13 +114,17 @@ class DifficultyVectorStore:
                 )
             )
 
-        if target is not None:
-            must_conditions.append(
+        if target:
+            should_conditions.extend([
                 FieldCondition(
                     key="target",
                     match=MatchValue(value=target),
-                )
-            )
+                ),
+                FieldCondition(
+                    key="target",
+                    match=MatchValue(value="any"),
+                ),
+            ])
 
         if intent is not None:
             must_conditions.append(

@@ -55,7 +55,7 @@ class DifficultyService:
             query_text=query_text,
             intent=intent,
             template_id=template_id,
-            target=target,
+            target=target if target else None,
         )
 
         card_map = {
@@ -115,7 +115,7 @@ ADVANCED 기준:
         except Exception:
             raise CustomException(
                 GlobalErrorCode.INTERNAL_SERVER_ERROR,
-                "LLM 응답 JSON 파싱에 실패했습니다.",
+                "LLM 응답 실패했습니다.",
             )
 
         return DifficultyDiagnosisResult(**data)
