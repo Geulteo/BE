@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Request
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends
@@ -7,8 +7,8 @@ import os
 from jose import jwt, JWTError
 from config.settings import get_settings
 
-# JWT Bearer 토큰 스키마
-security = HTTPBearer()
+# JWT Bearer 토큰 스키마 (Swagger UI용)
+security = HTTPBearer(auto_error=False)
 
 # settings.py 값 사용
 settings = get_settings()
@@ -30,11 +30,27 @@ def decode_jwt_token(token: str) -> dict:
         )
 
 
-# 토큰 인증 의존성 get_current_user에 decode 함수 적용 ---
+# 토큰 인증 의존성 - 쿠키 또는 Authorization 헤더에서 토큰 읽기 ---
 async def get_current_user(
+    request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
-    token = credentials.credentials
+    token = None
+    
+    # 1. 먼저 쿠키에서 토큰 확인 (프론트엔드 HttpOnly 쿠키)
+    token = request.cookies.get("accessToken")
+    
+    # 2. 쿠키에 없으면 Authorization 헤더에서 확인 (Swagger UI 등)
+    if not token and credentials:
+        token = credentials.credentials
+    
+    # 3. 토큰이 없으면 401 에러
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+        )
+    
     payload = decode_jwt_token(token)
     return payload
 
