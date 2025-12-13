@@ -3,7 +3,7 @@ import numpy as np
 from typing import Dict, List
 from sentence_transformers import SentenceTransformer
 
-from services.intent.config import (
+from templates.intent_templates import (
     INTENT_TEMPLATES,
     INTENT_KEYWORD_BOOST,
     INTENT_KEYWORD_WEIGHT,
