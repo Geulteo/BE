@@ -8,7 +8,7 @@ from database.session import Base, engine
 
 import logging
 from config.swagger_config import setup_swagger
-from routers import auth, keyword, training_test
+from routers import auth, keyword, training_test, sentence, training 
 from core.exception_handlers import register_exception_handlers
 from services.difficulty_vector_store import DifficultyVectorStore
 from services.difficulty_service import DifficultyService
@@ -100,3 +100,6 @@ app.include_router(auth.router)
 app.include_router(keyword.router)
 
 app.include_router(training_test.router)
+
+app.include_router(sentence.router)   
+app.include_router(training.router)
