@@ -10,12 +10,43 @@ class IntentType(str, Enum):
 
 
 class TemplateId(str, Enum):
-    # 템플릿 유형 - 안적혀 있는 부분 유형들 추후에 추가할 예정
-    REQUEST_DEADLINE = "request_deadline"   # 마감/기한 연장 요청
-    REQUEST_ABSENCE = "request_absence"     # 결석/지각 양해 요청
-    REQUEST_HELP = "request_help"           # 과제/업무 도움 요청
-    REQUEST_INFO = "request_info"           # 자료 요청
-    REQUEST_DEFAULT = "request_default"     # 기타 요청
+    # REQUEST
+    REQUEST_DEADLINE = "request_deadline"
+    REQUEST_ABSENCE = "request_absence"
+    REQUEST_HELP = "request_help"
+    REQUEST_INFO = "request_info"
+    REQUEST_SCHEDULE = "request_schedule"
+    REQUEST_MEETING = "request_meeting"
+    REQUEST_DEFAULT = "request_default"
+
+    # QUESTION
+    QUESTION_PROCEDURE = "question_procedure"
+    QUESTION_REQUIREMENT = "question_requirement"
+    QUESTION_DEADLINE = "question_deadline"
+    QUESTION_REASON = "question_reason"
+    QUESTION_DETAIL = "question_detail"
+    QUESTION_DEFAULT = "question_default"
+
+    # NOTICE
+    NOTICE_SCHEDULE_CHANGE = "notice_schedule_change"
+    NOTICE_GENERAL = "notice_general"
+    NOTICE_EVENT = "notice_event"
+    NOTICE_POLICY = "notice_policy"
+    NOTICE_RESULT = "notice_result"
+
+    # COMPLAINT
+    COMPLAINT_SERVICE = "complaint_service"
+    COMPLAINT_ERROR = "complaint_error"
+    COMPLAINT_DELAY = "complaint_delay"
+    COMPLAINT_ATTITUDE = "complaint_attitude"
+    COMPLAINT_DEFAULT = "complaint_default"
+
+    # APOLOGY
+    APOLOGY_DELAY = "apology_delay"
+    APOLOGY_MISTAKE = "apology_mistake"
+    APOLOGY_INCONVENIENCE = "apology_inconvenience"
+    APOLOGY_MISCOMMUNICATION = "apology_miscommunication"
+    APOLOGY_DEFAULT = "apology_default"
 
 class TargetType(str, Enum):
     PROFESSOR = "professor"        # 교수님
