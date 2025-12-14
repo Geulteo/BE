@@ -14,9 +14,15 @@ class Settings(BaseSettings):
     QDRANT_HOST: str = "qdrant"   # docker-compose 기준 서비스 이름
     QDRANT_PORT: int = 6333
     QDRANT_DIFFICULTY_COLLECTION: str = "difficulty_cards"
+    QDRANT_USER_SENTENCE_COLLECTION: str = "user_sentences"
 
     # SBERT / Embedding 모델
     SBERT_MODEL_NAME: str = "jhgan/ko-sbert-multitask"
+    SBERT_DIM: int = 768
+
+    # Qdrant 접속 URL 유틸 (QdrantClient(url=...)에 바로 사용)
+    def qdrant_url(self) -> str:
+        return f"http://{self.QDRANT_HOST}:{self.QDRANT_PORT}"
 
     # LLM 설정
     OPENAI_API_KEY: Optional[str] = None
