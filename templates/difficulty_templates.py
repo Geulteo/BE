@@ -8,232 +8,232 @@ from core.level_enums import DifficultyLevel
 
 DIFFICULTY_CARDS: List[DifficultyCard] = [
     # =========================================================
-    # REQUEST_DEADLINE (마감/기한 연장 요청)
+    # REQUEST  (슬롯: 상황 / 이유 / 요청 / 마무리)
     # =========================================================
     DifficultyCard(
-        id="request_deadline_beginner_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_DEADLINE,
-        level=DifficultyLevel.BEGINNER,
-        title="초급 - 단순 마감 연장 요청",
-        guide="이유는 간단히만 언급하고, 과제명이나 정확한 마감일 언급이 부족한 경우.",
-        hint="이유는 있으나 과제/날짜 정보가 거의 없는 기본 수준의 연장 요청입니다.",
-        checklist=[
-            "이유가 매우 짧게만 언급된다",
-            "과제명/수업명/정확한 날짜가 명시되지 않는다",
-            "문장이 1~2개로 아주 짧다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_deadline_intermediate_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_DEADLINE,
-        level=DifficultyLevel.INTERMEDIATE,
-        title="중급 - 이유와 일정이 어느 정도 정리된 연장 요청",
-        guide="수업명 또는 과제명을 언급하고, 구체적인 사유와 날짜를 포함하지만 대안 제시는 부족한 경우.",
-        hint="수업명/이유/날짜는 포함되어 있지만, 희망 제출일 등 대안이 부족한 단계입니다.",
-        checklist=[
-            "수업명 또는 과제명이 나온다",
-            "구체적인 이유가 포함된다(예: 병원 진료)",
-            "현재 마감일 또는 날짜 정보가 포함된다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_deadline_advanced_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_DEADLINE,
-        level=DifficultyLevel.ADVANCED,
-        title="고급 - 대안과 배려까지 포함한 연장 요청",
-        guide="과제명, 마감일, 희망 제출일, 수업 운영에 대한 배려 표현까지 포함된 정중한 요청.",
-        hint="과제명/마감/희망일/배려 표현이 모두 포함된 완성도 높은 연장 요청입니다.",
-        checklist=[
-            "과제명/수업명이 명확하다",
-            "기존 마감일과 희망 제출일이 모두 나온다",
-            "정중한 표현과 감사/사과, 배려가 포함된다",
-        ],
-    ),
-
-    # =========================================================
-    # REQUEST_ABSENCE (결석/지각 양해 요청)
-    # =========================================================
-    DifficultyCard(
-        id="request_absence_beginner_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_ABSENCE,
-        level=DifficultyLevel.BEGINNER,
-        title="초급 - 결석/지각 양해 요청(정보 부족)",
-        guide="결석/지각 사실만 말하고, 사유·대안·후속 조치가 거의 없는 경우.",
-        hint="못 간다는 말은 했지만 이유/대안이 부족한 기본 수준의 양해 요청입니다.",
-        checklist=[
-            "결석/지각 여부만 짧게 언급된다",
-            "이유가 없거나 매우 단순하다",
-            "수업/약속 정보(언제/무슨 수업)가 명확하지 않다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_absence_intermediate_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_ABSENCE,
-        level=DifficultyLevel.INTERMEDIATE,
-        title="중급 - 사유와 일정 포함된 결석/지각 양해 요청",
-        guide="언제 어떤 수업/약속인지와 사유를 포함하나, 보완 행동(자료 확인/과제 대체 등)이 부족한 경우.",
-        hint="언제/왜 못 오는지는 말했지만, 이후 어떻게 할지 제시가 부족한 단계입니다.",
-        checklist=[
-            "수업/약속명 또는 일정(날짜/시간)이 포함된다",
-            "구체적인 사유가 포함된다(예: 병원/가정 사정)",
-            "양해 표현은 있으나 후속 조치가 약하다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_absence_advanced_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_ABSENCE,
-        level=DifficultyLevel.ADVANCED,
-        title="고급 - 후속 조치까지 포함한 결석/지각 양해 요청",
-        guide="결석/지각 사유와 일정, 그리고 보완 계획(자료 확인/대체 과제/다음 수업 준비)을 함께 제시하는 경우.",
-        hint="양해 요청 + 책임 있는 후속 조치까지 포함된 완성형입니다.",
-        checklist=[
-            "언제/어떤 일정인지 명확하다",
-            "사유가 구체적이고 정중하게 전달된다",
-            "후속 조치(자료/수업 내용 확인, 과제 대체 등)가 포함된다",
-        ],
-    ),
-
-    # =========================================================
-    # REQUEST_HELP (과제/업무 도움 요청)
-    # =========================================================
-    DifficultyCard(
-        id="request_help_beginner_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_HELP,
-        level=DifficultyLevel.BEGINNER,
-        title="초급 - 도움 요청(요구만 있고 맥락 부족)",
-        guide="도움이 필요하다는 말만 있고, 어떤 부분이 막혔는지/무엇을 시도했는지 정보가 부족한 경우.",
-        hint="도와달라고는 했지만 '어디가' 어려운지 설명이 부족한 단계입니다.",
-        checklist=[
-            "요청만 있고 구체적 문제 설명이 없다",
-            "과제/업무 맥락(주제/목표)이 불명확하다",
-            "시도한 내용이 없다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_help_intermediate_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_HELP,
-        level=DifficultyLevel.INTERMEDIATE,
-        title="중급 - 문제 구간을 설명한 도움 요청",
-        guide="과제/업무 맥락과 막히는 지점은 설명하되, 시도한 방법/현재 상태 정리가 부족한 경우.",
-        hint="막힌 지점은 말했지만, 시도/현재 상태가 덜 정리된 단계입니다.",
-        checklist=[
-            "과제/업무 주제 또는 요구사항이 언급된다",
-            "막히는 지점(오류/개념/단계)이 설명된다",
-            "시도한 내용 또는 현재 진행 상태가 일부 포함된다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_help_advanced_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_HELP,
-        level=DifficultyLevel.ADVANCED,
-        title="고급 - 시도 내용 + 구체 질문이 포함된 도움 요청",
-        guide="맥락, 시도한 방법, 현재 상태, 원하는 도움(구체 질문/요청 범위)을 명확히 제시한 경우.",
-        hint="상대가 바로 도와줄 수 있도록 정보가 잘 갖춰진 완성형 도움 요청입니다.",
-        checklist=[
-            "맥락(과제/업무 목적)과 현재 상태가 정리되어 있다",
-            "시도한 방법/결과가 포함된다(로그/에러/과정 등)",
-            "원하는 도움의 형태가 구체적이다(무엇을/어떻게)",
-        ],
-    ),
-
-    # =========================================================
-    # REQUEST_INFO (자료 요청)
-    # =========================================================
-    DifficultyCard(
-        id="request_info_beginner_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_INFO,
-        level=DifficultyLevel.BEGINNER,
-        title="초급 - 자료 요청(대상/범위 불명확)",
-        guide="자료를 달라고만 하고 어떤 자료인지, 범위/형식/기한이 없는 경우.",
-        hint="요청은 했지만 상대가 뭘 줘야 할지 애매한 단계입니다.",
-        checklist=[
-            "요청 자료가 구체적으로 특정되지 않는다",
-            "범위/형식(파일/링크 등)이 없다",
-            "언제까지 필요한지 기한 정보가 없다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_info_intermediate_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_INFO,
-        level=DifficultyLevel.INTERMEDIATE,
-        title="중급 - 자료 종류/용도는 있으나 조건이 부족한 요청",
-        guide="요청 자료의 종류나 용도는 말하지만, 범위/형식/기한 중 일부가 부족한 경우.",
-        hint="무슨 자료인지는 알겠는데, 전달 조건이 덜 정리된 단계입니다.",
-        checklist=[
-            "요청 자료(예: 강의자료/문서/파일)가 어느 정도 특정된다",
-            "용도 또는 필요한 이유가 포함된다",
-            "범위/형식/기한 중 1개 이상이 부족하다",
-        ],
-    ),
-    DifficultyCard(
-        id="request_info_advanced_1",
-        intent=IntentType.REQUEST,
-        template_id=TemplateId.REQUEST_INFO,
-        level=DifficultyLevel.ADVANCED,
-        title="고급 - 범위/형식/기한까지 명확한 자료 요청",
-        guide="요청 자료의 범위, 전달 형식, 필요한 시점(기한)을 명확히 하고 감사 표현까지 포함한 경우.",
-        hint="상대가 바로 제공할 수 있도록 조건이 완벽히 정리된 자료 요청입니다.",
-        checklist=[
-            "요청 자료의 범위가 명확하다(어느 부분/어느 주차 등)",
-            "형식(파일/링크/문서 등) 또는 전달 방식이 제시된다",
-            "필요 기한/시점과 감사 표현이 포함된다",
-        ],
-    ),
-
-    # =========================================================
-    # REQUEST_DEFAULT (기타 요청)
-    # =========================================================
-    DifficultyCard(
-        id="request_default_beginner_1",
+        id="request_beginner_1",
         intent=IntentType.REQUEST,
         template_id=TemplateId.REQUEST_DEFAULT,
         level=DifficultyLevel.BEGINNER,
-        title="초급 - 기타 요청(요청만 존재)",
-        guide="무엇을 부탁하는지는 있으나, 배경/이유/조건이 부족한 단순 요청.",
-        hint="요청 문장만 있고 맥락이 거의 없는 단계입니다.",
+        title="초급 - 기본 요청(정보 부족)",
+        guide="요청은 있지만 상황/이유/조건 정보가 부족해 상대가 판단하기 어려운 경우.",
+        hint="요청 의도는 전달되지만 핵심 정보(무엇/언제/왜/어떻게)가 빠져 있습니다.",
         checklist=[
-            "무엇을 원하는지는 있으나 이유/배경이 없다",
-            "상대가 판단할 조건(기간/범위 등)이 부족하다",
-            "문장이 짧고 단순하다",
+            "요청만 있고 상황/배경 설명이 거의 없다",
+            "이유가 없거나 매우 짧다",
+            "조건(기한/범위/대상/원하는 결과)이 불명확하다",
         ],
     ),
     DifficultyCard(
-        id="request_default_intermediate_1",
+        id="request_intermediate_1",
         intent=IntentType.REQUEST,
         template_id=TemplateId.REQUEST_DEFAULT,
         level=DifficultyLevel.INTERMEDIATE,
-        title="중급 - 배경/이유는 있으나 구체 조건 부족한 요청",
-        guide="배경과 이유는 설명하지만, 원하는 결과/조건/기한이 덜 구체적인 경우.",
-        hint="왜 부탁하는지는 알겠는데, 정확히 어떻게 해주면 되는지 덜 명확한 단계입니다.",
+        title="중급 - 이유 포함 요청(조건 일부 부족)",
+        guide="상황과 이유는 말하지만, 기한/대안/구체 조건이 일부 부족한 경우.",
+        hint="상대가 이해는 하지만 처리 기준이 부족해 추가 질문이 필요할 수 있습니다.",
         checklist=[
-            "배경/이유가 포함된다",
-            "원하는 결과가 대략적으로 제시된다",
-            "조건(기한/범위/우선순위)이 일부 부족하다",
+            "상황과 요청이 연결되어 설명된다",
+            "구체적인 이유가 포함된다(예: 일정/개인 사정)",
+            "조건(기한/범위/우선순위/대안) 중 일부가 부족하다",
         ],
     ),
     DifficultyCard(
-        id="request_default_advanced_1",
+        id="request_advanced_1",
         intent=IntentType.REQUEST,
         template_id=TemplateId.REQUEST_DEFAULT,
         level=DifficultyLevel.ADVANCED,
-        title="고급 - 조건/기한/배려가 정리된 기타 요청",
-        guide="요청 내용, 배경, 원하는 결과, 조건/기한, 감사/배려 표현까지 포함된 요청.",
-        hint="상대가 판단/처리하기 쉬운 정보 구조를 갖춘 완성형 요청입니다.",
+        title="고급 - 조건/대안/배려까지 갖춘 요청",
+        guide="상황·이유·요청·마무리가 자연스럽고, 상대가 바로 처리할 수 있을 정도로 구체적인 경우.",
+        hint="요청 내용과 조건이 명확하고, 배려/감사 표현까지 포함된 완성형입니다.",
         checklist=[
-            "요청 내용과 원하는 결과가 명확하다",
-            "조건(기한/범위/우선순위) 또는 대안이 제시된다",
-            "정중한 마무리(감사/배려)가 포함된다",
+            "상황-이유-요청이 논리적으로 정리되어 있다",
+            "원하는 결과/조건(기한·범위·형식 등)이 구체적이다",
+            "대안 또는 배려/감사 표현이 포함된다",
+        ],
+    ),
+
+    # =========================================================
+    # QUESTION (슬롯: 상황 / 모르겠는 점 / 구체적 질문)
+    # =========================================================
+    DifficultyCard(
+        id="question_beginner_1",
+        intent=IntentType.QUESTION,
+        template_id=TemplateId.QUESTION_DEFAULT,
+        level=DifficultyLevel.BEGINNER,
+        title="초급 - 단순 질문(맥락 부족)",
+        guide="무엇이 궁금한지는 있으나 배경/전제/시도한 내용이 부족한 경우.",
+        hint="질문은 했지만 상대가 어떤 상황인지 파악하기 어렵습니다.",
+        checklist=[
+            "질문만 있고 상황/전제가 부족하다",
+            "‘뭐가 문제인지’가 뭉뚱그려져 있다",
+            "시도한 내용/현재 상태가 없다",
+        ],
+    ),
+    DifficultyCard(
+        id="question_intermediate_1",
+        intent=IntentType.QUESTION,
+        template_id=TemplateId.QUESTION_DEFAULT,
+        level=DifficultyLevel.INTERMEDIATE,
+        title="중급 - 배경 포함 질문(범위/조건 일부 부족)",
+        guide="상황과 궁금한 점은 설명하지만, 질문의 범위/조건/원하는 답 형태가 덜 명확한 경우.",
+        hint="상대가 답할 수는 있으나 추가 확인이 필요한 질문입니다.",
+        checklist=[
+            "상황/배경(무엇을 하다가)이 포함된다",
+            "모르겠는 점이 비교적 구체적이다",
+            "질문 범위/조건(예: 버전/환경/기준)이 일부 부족하다",
+        ],
+    ),
+    DifficultyCard(
+        id="question_advanced_1",
+        intent=IntentType.QUESTION,
+        template_id=TemplateId.QUESTION_DEFAULT,
+        level=DifficultyLevel.ADVANCED,
+        title="고급 - 조건/시도/원하는 답까지 명확한 질문",
+        guide="배경, 문제 지점, 시도한 내용, 원하는 답변 형태까지 갖춰 답변 효율이 높은 경우.",
+        hint="상대가 바로 핵심을 짚어 답할 수 있는 완성형 질문입니다.",
+        checklist=[
+            "상황/전제와 문제 지점이 명확하다",
+            "시도한 내용/현재 상태가 정리되어 있다",
+            "원하는 답(절차/기준/예시 등)이 구체적이다",
+        ],
+    ),
+
+    # =========================================================
+    # NOTICE (슬롯: 배경 / 핵심 정보 / 변경사항 / 마무리)
+    # =========================================================
+    DifficultyCard(
+        id="notice_beginner_1",
+        intent=IntentType.NOTICE,
+        template_id=TemplateId.NOTICE_GENERAL,
+        level=DifficultyLevel.BEGINNER,
+        title="초급 - 공지(핵심 정보 부족)",
+        guide="공지하려는 의도는 있으나 일정/장소/대상/변경사항 등 핵심 정보가 빠진 경우.",
+        hint="무슨 공지인지 감은 오지만, 실행에 필요한 정보가 부족합니다.",
+        checklist=[
+            "무엇이 공지인지 핵심이 모호하다",
+            "대상/일정/장소/방법 등 필수 정보가 빠진다",
+            "변경사항 또는 해야 할 행동이 명확하지 않다",
+        ],
+    ),
+    DifficultyCard(
+        id="notice_intermediate_1",
+        intent=IntentType.NOTICE,
+        template_id=TemplateId.NOTICE_GENERAL,
+        level=DifficultyLevel.INTERMEDIATE,
+        title="중급 - 공지(주요 정보 포함, 일부 불명확)",
+        guide="배경과 핵심 정보는 있으나 변경 전/후 비교, 세부 행동 지침이 부족한 경우.",
+        hint="필수 정보는 대체로 있지만, 수신자가 헷갈릴 수 있는 부분이 남아 있습니다.",
+        checklist=[
+            "배경 또는 목적이 간단히 설명된다",
+            "일정/장소/대상 등 주요 정보가 포함된다",
+            "변경 전/후 또는 후속 행동 안내가 일부 부족하다",
+        ],
+    ),
+    DifficultyCard(
+        id="notice_advanced_1",
+        intent=IntentType.NOTICE,
+        template_id=TemplateId.NOTICE_GENERAL,
+        level=DifficultyLevel.ADVANCED,
+        title="고급 - 공지(변경사항/행동지침까지 명확)",
+        guide="배경-핵심정보-변경사항-마무리가 깔끔하고, 수신자가 바로 행동할 수 있는 경우.",
+        hint="혼동 없이 전달되는 완성형 공지입니다.",
+        checklist=[
+            "핵심 정보(무엇/언제/어디/대상)가 명확하다",
+            "변경사항(전/후)과 이유/영향이 정리되어 있다",
+            "수신자가 해야 할 행동/문의 방법이 포함된다",
+        ],
+    ),
+
+    # =========================================================
+    # COMPLAINT (슬롯: 문제 상황 / 영향 / 해결 요청)
+    # =========================================================
+    DifficultyCard(
+        id="complaint_beginner_1",
+        intent=IntentType.COMPLAINT,
+        template_id=TemplateId.COMPLAINT_DEFAULT,
+        level=DifficultyLevel.BEGINNER,
+        title="초급 - 불만 제기(상황 설명 부족)",
+        guide="불만 감정만 강하고, 언제/어디서/무엇이 문제였는지 구체 정보가 부족한 경우.",
+        hint="문제는 있는 듯하지만 재현/확인이 어려운 단계입니다.",
+        checklist=[
+            "문제 상황이 추상적이고 구체성이 부족하다",
+            "발생 시점/환경/조건 정보가 없다",
+            "원하는 해결(요청 사항)이 불명확하다",
+        ],
+    ),
+    DifficultyCard(
+        id="complaint_intermediate_1",
+        intent=IntentType.COMPLAINT,
+        template_id=TemplateId.COMPLAINT_DEFAULT,
+        level=DifficultyLevel.INTERMEDIATE,
+        title="중급 - 불만 제기(상황/영향 포함, 요청 일부 부족)",
+        guide="문제 상황과 영향은 설명하지만, 원하는 해결 방식이나 증빙 정보가 부족한 경우.",
+        hint="상대가 대응 가능하지만 추가 정보가 필요할 수 있습니다.",
+        checklist=[
+            "문제 상황(무엇이 잘못됐는지)이 설명된다",
+            "영향(불편/손해/지연)이 언급된다",
+            "원하는 해결 요청이 있으나 구체 조건/증빙이 부족하다",
+        ],
+    ),
+    DifficultyCard(
+        id="complaint_advanced_1",
+        intent=IntentType.COMPLAINT,
+        template_id=TemplateId.COMPLAINT_DEFAULT,
+        level=DifficultyLevel.ADVANCED,
+        title="고급 - 재현조건/증빙/해결요청이 명확한 불만",
+        guide="문제 상황, 재현 조건, 영향, 원하는 해결을 정중하게 구조화한 경우.",
+        hint="상대가 즉시 조치하기 쉬운 완성형 문제 제기입니다.",
+        checklist=[
+            "발생 시점/환경/재현 조건이 구체적이다",
+            "영향과 우선순위가 명확하다",
+            "원하는 해결(환불/조치/가이드)과 증빙(로그/캡처)이 제시된다",
+        ],
+    ),
+
+    # =========================================================
+    # APOLOGY (슬롯: 상황 / 원인 / 사과 / 후속 조치)
+    # =========================================================
+    DifficultyCard(
+        id="apology_beginner_1",
+        intent=IntentType.APOLOGY,
+        template_id=TemplateId.APOLOGY_DEFAULT,
+        level=DifficultyLevel.BEGINNER,
+        title="초급 - 단순 사과(원인/후속 조치 부족)",
+        guide="미안하다는 표현은 있으나 무엇에 대한 사과인지/어떻게 할지 정보가 부족한 경우.",
+        hint="감정 표현은 있지만 상대의 불편을 해소하기엔 부족합니다.",
+        checklist=[
+            "사과 표현만 있고 상황 설명이 부족하다",
+            "원인 또는 책임 인식이 약하다",
+            "후속 조치/재발 방지 언급이 없다",
+        ],
+    ),
+    DifficultyCard(
+        id="apology_intermediate_1",
+        intent=IntentType.APOLOGY,
+        template_id=TemplateId.APOLOGY_DEFAULT,
+        level=DifficultyLevel.INTERMEDIATE,
+        title="중급 - 상황/원인 포함 사과(조치 일부 부족)",
+        guide="무슨 일이 있었는지와 원인은 설명하지만, 구체적인 해결 일정/방법이 부족한 경우.",
+        hint="상대가 납득은 가능하지만, 신뢰 회복을 위한 조치가 더 필요합니다.",
+        checklist=[
+            "상황(무슨 일이 있었는지)이 설명된다",
+            "원인/책임 인식이 포함된다",
+            "후속 조치가 있으나 구체성(언제/어떻게)이 부족하다",
+        ],
+    ),
+    DifficultyCard(
+        id="apology_advanced_1",
+        intent=IntentType.APOLOGY,
+        template_id=TemplateId.APOLOGY_DEFAULT,
+        level=DifficultyLevel.ADVANCED,
+        title="고급 - 해결계획/재발방지까지 포함한 사과",
+        guide="상황-원인-사과-후속조치가 구조적으로 정리되어 신뢰 회복에 도움이 되는 경우.",
+        hint="구체적인 조치와 재발 방지가 포함된 완성형 사과입니다.",
+        checklist=[
+            "상황/원인이 명확하고 변명 없이 정리되어 있다",
+            "구체적인 후속 조치(일정/방법/담당)가 포함된다",
+            "재발 방지 약속과 정중한 마무리가 포함된다",
         ],
     ),
 ]

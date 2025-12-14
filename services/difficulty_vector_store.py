@@ -142,7 +142,12 @@ class DifficultyVectorStore:
                 )
             )
 
-        qdrant_filter = Filter(must=must_conditions) if must_conditions else None
+        qdrant_filter = None
+        if must_conditions or should_conditions:
+            qdrant_filter = Filter(
+                must=must_conditions if must_conditions else None,
+                should=should_conditions if should_conditions else None
+            )
 
         result = self.client.query_points(
             collection_name=self.collection_name,
