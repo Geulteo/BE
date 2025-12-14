@@ -8,7 +8,10 @@ from database.session import Base, engine
 
 import logging
 from config.swagger_config import setup_swagger
-from routers import auth, keyword, training_test, sentence, training 
+from routers import auth, keyword, training_test, sentence, training
+from repositories.user_sentence_repository import UserSentenceRepository
+from sentence_transformers import SentenceTransformer
+from qdrant_client import QdrantClient
 from core.exception_handlers import register_exception_handlers
 from services.difficulty_vector_store import DifficultyVectorStore
 from services.difficulty_service import DifficultyService
@@ -66,6 +69,31 @@ async def lifespan(app_instance: FastAPI):
 
     except Exception as e:
         logger.exception(f"Intent 분류기 초기화 중 오류 발생: {e}")
+
+    try:
+        # SBERT 임베딩 모델 로드 (서버 시작 시 1회)
+        embedder = SentenceTransformer(settings.SBERT_MODEL_NAME)
+        app_instance.state.embedder = embedder
+        logger.info("추천용 SBERT embedder 초기화 완료")
+
+        # Qdrant client 초기화
+        qdrant_client = QdrantClient(
+            host=settings.QDRANT_HOST,
+            port=settings.QDRANT_PORT,
+        )
+
+        # 유저 문장 추천 Repository 생성
+        user_sentence_repo = UserSentenceRepository(qdrant_client)
+
+        # 추천용 컬렉션 없으면 생성
+        user_sentence_repo.ensure_collection()
+
+        # 다른 서비스/라우터에서 사용하도록 state 등록
+        app_instance.state.user_sentence_repo = user_sentence_repo
+        logger.info("유저 문장 추천 서비스 초기화 완료")
+
+    except Exception as e:
+        logger.exception(f"추천 기능 초기화 중 오류 발생: {e}")
 
     yield   # --- 앱이 실행되는 동안 --- #
 
