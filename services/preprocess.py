@@ -61,3 +61,9 @@ def preprocess_and_validate_input(data: KeywordRequest) -> Dict[str, Any]:
         "message": "전처리 및 검증 완료",
         **preprocessed_data
     }
+
+def build_sentence_for_sbert(raw_text: str) -> str:
+    cleaned_text = re.sub(r"[^가-힣a-zA-Z0-9\s]", "", raw_text)
+    cleaned_text = re.sub(r"\s+", " ", cleaned_text).strip()
+    keywords, _ = _extract_pos_tags(cleaned_text)
+    return _generate_sbert_sentence(keywords)
