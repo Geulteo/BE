@@ -1,10 +1,3 @@
-"""
-훈련 기능
-- Mode A: 키워드 기반 작문 연습 (사용자가 직접 작성 → AI 평가)
-- Mode B: 톤 변환 연습 (주어진 문장을 특정 톤으로 변환 → AI 평가)
-- Session Memory: 이전 시도를 기억하여 점진적 개선 피드백 제공
-"""
-
 from openai import OpenAI, OpenAIError
 from config.settings import get_settings
 from repositories.session_memory import session_memory

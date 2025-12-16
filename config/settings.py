@@ -3,7 +3,6 @@ from urllib.parse import urlparse, urlunparse, quote
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -11,7 +10,7 @@ class Settings(BaseSettings):
     )
 
     # Qdrant 설정 (배포 시 .env에서 주입)
-    QDRANT_HOST: str = "qdrant"   # docker-compose 기준 서비스 이름
+    QDRANT_HOST: str = "qdrant"
     QDRANT_PORT: int = 6333
     QDRANT_DIFFICULTY_COLLECTION: str = "difficulty_cards"
     QDRANT_USER_SENTENCE_COLLECTION: str = "user_sentences"
@@ -20,7 +19,7 @@ class Settings(BaseSettings):
     SBERT_MODEL_NAME: str = "jhgan/ko-sbert-multitask"
     SBERT_DIM: int = 768
 
-    # Qdrant 접속 URL 유틸 (QdrantClient(url=...)에 바로 사용)
+    # Qdrant 접속 URL 유틸
     def qdrant_url(self) -> str:
         return f"http://{self.QDRANT_HOST}:{self.QDRANT_PORT}"
 
@@ -33,11 +32,11 @@ class Settings(BaseSettings):
     DB_PASSWORD: Optional[str] = None
 
     # JWT 설정
-    SECRET_KEY: str  # JWT 서명에 사용할 비밀 키
-    ALGORITHM: str = "HS256"  # JWT 암호화 알고리즘
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 액세스 토큰 만료 시간 (분)
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    CORS_ORIGINS: Optional[str] = "*"   # 기본은 전체 허용 (개발용)
+    CORS_ORIGINS: Optional[str] = "*"
 
     def database_url_sync(self) -> str:
         if not self.DB_URL:

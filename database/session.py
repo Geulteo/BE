@@ -24,8 +24,8 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 
 def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal() # SessionLocal 팩토리에서 새로운 세션 객체를 생성
+    db = SessionLocal()
     try:
-        yield db # FastAPI 라우터에 세션(db) 객체를 제공
+        yield db
     finally:
         db.close() # 요청 처리 완료 후 세션을 닫아 연결을 반환 및 해제

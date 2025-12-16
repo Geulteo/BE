@@ -1,14 +1,6 @@
-"""
-세션 메모리 관리
-
-훈련 세션의 히스토리를 메모리에 저장/조회하여
-이전 시도를 기억하고 개선 피드백을 제공
-"""
-
 from typing import Dict, List, Optional
 from datetime import datetime, timedelta
 from threading import Lock
-
 
 class SessionMemory:
 

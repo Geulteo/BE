@@ -28,8 +28,8 @@ router = APIRouter(
     description="새로운 사용자를 등록합니다. userid가 이미 존재할 경우 400 에러를 반환합니다."
 )
 def register_user(
-        user_data: UserCreateRequest,  # 요청 바디를 models.UserCreate 스키마로 받음
-        db: Session = Depends(get_db)  # database.session.get_db 함수를 통해 DB 세션 주입
+        user_data: UserCreateRequest,
+        db: Session = Depends(get_db)
 ):
 
     # userid 중복 확인
@@ -43,7 +43,6 @@ def register_user(
     # 응답 반환
     return BaseResponse.success_response(data=response_data, message="회원가입이 성공적으로 완료되었습니다.")
 
-# (DELETE /auth/users/{id})
 @router.delete(
     "/users/{id}",
     response_model=UserDeleteResponse,
@@ -73,7 +72,6 @@ def delete_user(
         detail=f"탈퇴된 사용자 ID: {db_user.userid}"
     )
 
-# 로그인 (POST /auth/login)
 @router.post("/login",
              response_model=BaseResponse,
              summary="로그인",
@@ -98,8 +96,6 @@ def login_for_access_token(
 
     return BaseResponse.success_response(data=token_data)
 
-
-# 로그아웃 (POST /auth/logout)
 @router.post(
     "/logout",
     response_model=BaseResponse,

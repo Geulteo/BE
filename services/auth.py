@@ -57,14 +57,6 @@ def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
 ) -> dict:
-    """
-    Authorization: Bearer <token> 에서 토큰을 꺼내
-    - JWT 디코딩
-    - 사용자 존재 여부 확인
-    - 토큰 블랙리스트 여부 확인
-    후, {"sub": userid} 형태로 반환.
-    (기존 delete_user에서 current_user.get("sub")로 쓰고 있으므로 dict로 맞춰줌)
-    """
     token = credentials.credentials
 
     # 토큰 블랙리스트 검사
