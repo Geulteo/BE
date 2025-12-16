@@ -9,16 +9,16 @@ from core.base_response import BaseResponse
 
 from services.auth import get_current_user
 from services.preprocess import preprocess_and_validate_input
+from services.preprocess import build_sentence_for_sbert
 
 router = APIRouter(
     prefix="/training",
     tags=["Training"],
 )
 
+# difficulty_service 인스턴스를 가져오는 함수
 def get_difficulty_service(request: Request) -> DifficultyService:
-    # main.py에서 app.state에 넣어둔 difficulty_service 인스턴스를 가져오는 함수
     return request.app.state.difficulty_service
-
 
 # 연습 난이도 진단
 @router.post(
@@ -32,19 +32,8 @@ async def diagnose_difficulty(
     service: DifficultyService = Depends(get_difficulty_service),
 ) -> BaseResponse:
 
-    # 1) 문장 전처리 → sentence_for_sbert 자동 생성
-    dummy_req = type(
-        "Req", (),
-        {
-            "raw_text": body.user_sentence,
-            "tone": None,
-            "length_option": None,
-            "target": None,
-        }
-    )
-
-    preprocess_result = preprocess_and_validate_input(dummy_req)
-    sentence_for_sbert = preprocess_result["sentence_for_sbert"]  # 전처리 결과
+    # 1) 문장 전처리 → sentence_for_sbert 생성
+    sentence_for_sbert = build_sentence_for_sbert(body.user_sentence)
 
     # 2) 사용자 ID 추출 (User 객체 기준)
     user_id = getattr(current_user, "id", None)
