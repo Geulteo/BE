@@ -1,7 +1,5 @@
 TEMPLATE_HINTS = {
-  # ======================
   # REQUEST
-  # ======================
   "request_deadline": {
     "must_like_advanced": ["기존 마감일", "희망 제출일"],  # 둘 다 있으면 고급 쪽으로
     "nice_to_have": ["과제명", "수업명", "사유", "대안", "양해", "감사"],
@@ -57,9 +55,7 @@ TEMPLATE_HINTS = {
     ],
   },
 
-  # ======================
   # QUESTION
-  # ======================
   "question_procedure": {
     "must_like_advanced": ["현재 단계", "막힌 단계"],
     "nice_to_have": ["절차", "순서", "방법", "어디까지", "다음"],
@@ -99,9 +95,7 @@ TEMPLATE_HINTS = {
   },
   "question_default": {"extra_checklist": ["질문이 구체적이고 답변 범위가 명확하다"]},
 
-  # ======================
   # NOTICE
-  # ======================
   "notice_schedule_change": {
     "must_like_advanced": ["변경 전", "변경 후"],
     "nice_to_have": ["일정", "변경", "시간", "날짜", "장소", "사유"],
@@ -130,9 +124,7 @@ TEMPLATE_HINTS = {
     "extra_checklist": ["후속 조치/문의 채널이 포함된다"],
   },
 
-  # ======================
   # COMPLAINT
-  # ======================
   "complaint_service": {
     "must_like_advanced": ["발생 시점", "불편 영향"],
     "nice_to_have": ["서비스", "불편", "이용", "개선", "요청"],
@@ -155,9 +147,7 @@ TEMPLATE_HINTS = {
   },
   "complaint_default": {"extra_checklist": ["문제-영향-해결요청 구조가 갖춰져 있다"]},
 
-  # ======================
   # APOLOGY
-  # ======================
   "apology_delay": {
     "must_like_advanced": ["지연 사유", "해결 일정"],
     "nice_to_have": ["지연", "늦어", "죄송", "오늘", "내일", "까지"],

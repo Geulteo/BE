@@ -33,7 +33,7 @@ class DifficultyVectorStore:
         # SBERT 모델은 싱글톤처럼 사용 (배포 시 성능 고려)
         self.model = SentenceTransformer(settings.SBERT_MODEL_NAME)
 
-        # Qdrant 클라이언트 (Docker / 배포 환경에서 host, port 주입)
+        # Qdrant 클라이언트
         self.client = client or QdrantClient(
             host=settings.QDRANT_HOST,
             port=settings.QDRANT_PORT,
@@ -43,12 +43,12 @@ class DifficultyVectorStore:
         self._index_cards()
 
     def _create_collection_if_needed(self) -> None:
-        # # 컬렉션이 없으면 생성, 있으면 그대로 사용
-        # collections = [c.name for c in self.client.get_collections().collections]
-        # if self.collection_name in collections:
-        #     return
+        # 컬렉션이 없으면 생성, 있으면 그대로 사용
+        collections = [c.name for c in self.client.get_collections().collections]
+        if self.collection_name in collections:
+            return
 
-        self.client.delete_collection(self.collection_name)
+        # self.client.delete_collection(self.collection_name)
 
         # SBERT 768차원 기준, 코사인 거리 사용
         self.client.create_collection(

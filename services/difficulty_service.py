@@ -29,7 +29,6 @@ class DifficultyService:
         intent: str,
         target: str,
     ) -> str:
-        """template_id를 검색 문장에 굳이 넣지 않아도 됨(카드 검색은 intent 기반)"""
         return (
             f"{target}에게 {intent} 상황에서 작성된 문장의 난이도 기준을 찾습니다. "
             f"문장 의미 요약: {sentence_for_sbert}"
@@ -37,7 +36,6 @@ class DifficultyService:
 
     @staticmethod
     def _build_template_hint_block(template_id: str) -> str:
-        """TEMPLATE_HINTS를 프롬프트에 넣기 좋은 문자열로 구성"""
         hint = TEMPLATE_HINTS.get(template_id, {})
         if not hint:
             return ""
@@ -68,12 +66,7 @@ class DifficultyService:
         target: str,
         user_id: Optional[int] = None,  # JWT 기반 사용자를 위한 확장 포인트
     ) -> DifficultyDiagnosisResult:
-        """
-        난이도 진단 전체 흐름:
-        1) RAG로 난이도 기준 카드 검색
-        2) 카드 + 사용자 문장을 GPT에 전달
-        3) 난이도(level) + 이유(reason) JSON 파싱
-        """
+
         # 1. 난이도 기준 카드 검색 (RAG)
         query_text = self._build_query_text(sentence_for_sbert, intent, template_id)
 

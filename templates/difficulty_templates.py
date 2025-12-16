@@ -7,9 +7,7 @@ from core.level_enums import DifficultyLevel
 
 
 DIFFICULTY_CARDS: List[DifficultyCard] = [
-    # =========================================================
     # REQUEST  (슬롯: 상황 / 이유 / 요청 / 마무리)
-    # =========================================================
     DifficultyCard(
         id="request_beginner_1",
         intent=IntentType.REQUEST,
@@ -53,9 +51,7 @@ DIFFICULTY_CARDS: List[DifficultyCard] = [
         ],
     ),
 
-    # =========================================================
     # QUESTION (슬롯: 상황 / 모르겠는 점 / 구체적 질문)
-    # =========================================================
     DifficultyCard(
         id="question_beginner_1",
         intent=IntentType.QUESTION,
@@ -99,9 +95,7 @@ DIFFICULTY_CARDS: List[DifficultyCard] = [
         ],
     ),
 
-    # =========================================================
     # NOTICE (슬롯: 배경 / 핵심 정보 / 변경사항 / 마무리)
-    # =========================================================
     DifficultyCard(
         id="notice_beginner_1",
         intent=IntentType.NOTICE,
@@ -145,9 +139,7 @@ DIFFICULTY_CARDS: List[DifficultyCard] = [
         ],
     ),
 
-    # =========================================================
     # COMPLAINT (슬롯: 문제 상황 / 영향 / 해결 요청)
-    # =========================================================
     DifficultyCard(
         id="complaint_beginner_1",
         intent=IntentType.COMPLAINT,
@@ -191,9 +183,7 @@ DIFFICULTY_CARDS: List[DifficultyCard] = [
         ],
     ),
 
-    # =========================================================
     # APOLOGY (슬롯: 상황 / 원인 / 사과 / 후속 조치)
-    # =========================================================
     DifficultyCard(
         id="apology_beginner_1",
         intent=IntentType.APOLOGY,

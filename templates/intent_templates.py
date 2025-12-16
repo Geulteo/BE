@@ -3,7 +3,6 @@ from typing import Dict, List
 from core.type_enums import IntentType
 
 # 1) 템플릿 문장 정의
-
 INTENT_TEMPLATES: Dict[IntentType, List[str]] = {
     IntentType.REQUEST: [
         "도움을 요청하는 상황입니다.",
@@ -61,7 +60,6 @@ INTENT_KEYWORD_WEIGHT = {
 }
 
 # 3) Threshold
-
 TOP_THRESHOLD = 0.40
 DIFF_THRESHOLD = 0.06
 TOP_K = 3

@@ -31,7 +31,7 @@ class RecommendationService:
             out.append(it)
         return out
 
-    # (1)엄격→(2)완화→(3)최후(user_id만) 순서로 검색하여 Top3 추천을 안정적으로 채운다.
+    # (1)엄격→(2)완화→(3)최후(user_id만) 순서로 검색하여 Top3 추천
     def recommend(
         self,
         *,
@@ -93,7 +93,6 @@ class RecommendationService:
         collected = self._dedup_by_text(collected)
         return collected[: self.TOP_K]
 
-    # 추천 후 학습 히스토리로 남기기 위해 현재 문장과 메타데이터를 Qdrant에 저장한다.
     def save(
         self,
         *,
