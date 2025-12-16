@@ -92,6 +92,15 @@ class DifficultyService:
 
         # 2. GPT 프롬프트 구성
         prompt = f"""
+당신은 한국어 글쓰기 난이도를 평가하는 조교입니다.
+
+이번 평가는 다음 맥락을 기준으로 이루어집니다.
+- 대상(Target): {target}
+- 상황(Template): {template_id}
+- 의도(Intent): {intent}
+
+아래는 해당 상황에서의 난이도 기준입니다.
+
 BEGINNER 기준:
 {card_map.get('beginner', '')}
 
@@ -106,7 +115,14 @@ ADVANCED 기준:
 [사용자 문장]
 {user_sentence}
 
+평가 시 다음을 반드시 고려하세요:
+- 이 문장이 **'{target}'에게 전달되는 표현으로 적절한지**
+- **'{template_id}' 상황에서 요구되는 사과/설명/정보 수준을 충족하는지**
+- 각 기준(structure, info, tone, fluency)이
+  → 이 대상과 상황에서는 왜 중요한지
+
 위 기준을 비교하여 beginner / intermediate / advanced 중 하나를 선택하세요.
+아래 4가지 항목을 **대상(target)과 상황(template) 관점에서 설명하세요.
 그리고 structure / info / tone / fluency 4가지 관점으로 이유를 설명하세요.
 
 반드시 아래 JSON 형식으로만 답변하세요:
