@@ -4,7 +4,6 @@ from typing import Optional
 
 from .error_codes import BaseErrorCode
 
-
 class CustomException(Exception):
     def __init__(self, error_code: BaseErrorCode, detail: Optional[str] = None):
         self.error_code = error_code
