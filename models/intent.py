@@ -2,7 +2,6 @@ from typing import List, Dict, Optional
 from pydantic import BaseModel
 from core.type_enums import IntentType
 
-
 class IntentResult(BaseModel):
     cleaned_text: str
     keywords: List[str]
