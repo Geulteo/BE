@@ -23,3 +23,7 @@ orjson
 
 # FastAPI
 fastapi
+uvicorn[standard]
+
+# MySQL 인증 (cryptography)
+cryptography
