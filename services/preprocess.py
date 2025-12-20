@@ -3,7 +3,13 @@ from typing import List, Optional, Dict, Any
 from konlpy.tag import Okt
 from models.keyword import KeywordRequest
 
-okt = Okt()
+okt = None
+
+def _get_okt():
+    global okt
+    if okt is None:
+        okt = Okt()
+    return okt
 
 # 키워드 개수가 충분한지 검증
 def check_keyword_sufficiency(keywords: List[str]) -> Optional[str]:
@@ -13,7 +19,8 @@ def check_keyword_sufficiency(keywords: List[str]) -> Optional[str]:
 
 # 형태소 분석 및 품사 태그 추출
 def _extract_pos_tags(text: str) -> tuple[List[str], List[str]]:
-    pos_result = okt.pos(text, norm=True, stem=True)
+    okt_instance = _get_okt()
+    pos_result = okt_instance.pos(text, norm=True, stem=True)
     keywords = [word for word, pos in pos_result]
     pos_tags = [pos for word, pos in pos_result]
     return keywords, pos_tags
