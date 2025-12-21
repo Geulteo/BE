@@ -1,9 +1,3 @@
-"""
-훈련 API 라우터
-
-사용자의 문장 작성 연습을 평가하고 피드백을 제공하는 API 엔드포인트
-"""
-
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional

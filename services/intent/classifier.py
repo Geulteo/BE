@@ -18,7 +18,6 @@ settings = get_settings()
 
 
 class IntentClassifier:
-    """SBERT 기반 Intent Classification"""
 
     def __init__(self, model: SentenceTransformer | None = None):
         self.model = model or SentenceTransformer(settings.SBERT_MODEL_NAME)
