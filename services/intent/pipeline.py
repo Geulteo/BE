@@ -4,9 +4,8 @@ from services.intent.classifier import IntentClassifier
 from models.intent import IntentResult
 from services.preprocess import preprocess_and_validate_input
 
-
+# 전처리 + IntentClassifier 묶는 서비스
 class IntentPipeline:
-    """전처리 + IntentClassifier 묶는 서비스"""
 
     def __init__(self, classifier: IntentClassifier):
         self.classifier = classifier
